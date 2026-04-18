@@ -107,4 +107,49 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start typing effect after a short delay
     setTimeout(type, 1000);
 
+    // --- Real AJAX Form Submission ---
+    const contactForm = document.getElementById('contactForm');
+    const submitMsg = document.getElementById('submitMsg');
+
+    if(contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent redirecting to the captcha page permanently
+            
+            const btn = contactForm.querySelector('button');
+            const originalText = btn.innerHTML;
+            
+            // Loading state
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
+            
+            // Gather form data to send via AJAX
+            const formData = new FormData(contactForm);
+
+            fetch(contactForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json' // FormSubmit specific header for AJAX
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    contactForm.reset();
+                    btn.innerHTML = originalText;
+                    submitMsg.style.display = 'block';
+                    
+                    // Hide message after 5 seconds
+                    setTimeout(() => {
+                        submitMsg.style.display = 'none';
+                    }, 5000);
+                } else {
+                    btn.innerHTML = originalText;
+                    alert("Oops! There was a problem submitting your form");
+                }
+            })
+            .catch(error => {
+                btn.innerHTML = originalText;
+                alert("Oops! There was a problem submitting your form");
+            });
+        });
+    }
 });
