@@ -203,15 +203,18 @@
                     <div><i class="fa-solid fa-phone"></i> +91 9391286140</div>
                     <div><i class="fa-solid fa-envelope"></i> anvsasikumar19@gmail.com</div>
                 </div>
-                <form class="contact-form" id="contactForm">
+                <form class="contact-form" action="https://formsubmit.co/anvsasikumar19@gmail.com" method="POST">
+                    <!-- Config -->
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="https://sasikumar-19.github.io/Portfolio/">
+                    
                     <div class="input-group">
-                        <input type="text" id="name" required placeholder="Name">
-                        <input type="email" id="email" required placeholder="Email">
+                        <input type="text" name="name" required placeholder="Name">
+                        <input type="email" name="email" required placeholder="Email">
                     </div>
-                    <textarea id="message" rows="5" required placeholder="Your Message"></textarea>
+                    <textarea name="message" rows="5" required placeholder="Your Message"></textarea>
                     <button type="submit" class="btn btn-primary submit-btn">Send Message <i
                             class="fa-regular fa-paper-plane"></i></button>
-                    <div class="submit-msg" id="submitMsg">Message sent successfully!</div>
                 </form>
             </div>
         </section>
