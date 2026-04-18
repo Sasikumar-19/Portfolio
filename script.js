@@ -107,30 +107,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start typing effect after a short delay
     setTimeout(type, 1000);
 
-    // --- Form Submission Mock ---
-    const contactForm = document.getElementById('contactForm');
-    const submitMsg = document.getElementById('submitMsg');
-
-    if(contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Prevent page reload
-            const btn = contactForm.querySelector('button');
-            const originalText = btn.innerHTML;
-            
-            // Loading state
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
-            
-            // Mock API call delay
-            setTimeout(() => {
-                contactForm.reset();
-                btn.innerHTML = originalText;
-                submitMsg.style.display = 'block';
-                
-                // Hide message after 5 seconds
-                setTimeout(() => {
-                    submitMsg.style.display = 'none';
-                }, 5000);
-            }, 1500);
-        });
-    }
 });
