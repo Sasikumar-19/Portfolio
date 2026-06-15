@@ -184,11 +184,14 @@
                     </div>
                     <div class="project-info">
                         <h3>Pricing & Discount Optimization</h3>
-                        <p>Analysed 1M+ retail transactions to identify optimal discount tiers, measure price elasticity, and validate findings with A/B testing.</p>
+                        <p>A retail company was discounting broadly without knowing whether it was helping or hurting margin. Analysed 1M+ transactions to find the answer. Engineered discount percentage and margin score features, then calculated price elasticity across 322 product categories — finding 281 elastic (good discount targets) and 5 inelastic (avoid discounting entirely). Identified that margin turns negative beyond a 2.8% discount threshold. A/B tested the discount tiers (p-value: 0.000000, Cohen's d: 0.77 — medium effect) and delivered a per-category pricing recommendation table for the CFO with optimal max discount per category.</p>
                         <ul class="project-tech">
                             <li>Python</li>
-                            <li>SQL</li>
+                            <li>pandas</li>
+                            <li>scipy.stats</li>
+                            <li>SQLite</li>
                             <li>Power BI</li>
+                            <li>Price Elasticity</li>
                             <li>A/B Testing</li>
                         </ul>
                     </div>
@@ -208,12 +211,13 @@
                     </div>
                     <div class="project-info">
                         <h3>Olist E-Commerce Dashboards</h3>
-                        <p>Merged and processed multiple datasets to visualize KPIs tracking product performance,
-                            customer behavior, and regional sales distribution over geographic areas.</p>
+                        <p>Merged seven relational datasets from Brazil's Olist e-commerce platform covering 100,000+ orders into a single analysis-ready master dataset. Built KPIs for revenue, average order value, delivery performance, and customer satisfaction, visualised in an interactive Power BI dashboard with filters by state, product category, and time. Key insight: delivery delays beyond 7 days correlated with a measurable drop in average review score — a logistics finding with direct implications for seller SLA policy and customer retention strategy.</p>
                         <ul class="project-tech">
                             <li>Python</li>
                             <li>Pandas</li>
                             <li>Power BI</li>
+                            <li>Multi-table SQL</li>
+                            <li>KPI Design</li>
                         </ul>
                     </div>
                 </div>
@@ -232,13 +236,13 @@
                     </div>
                     <div class="project-info">
                         <h3>Walmart Retail Sales EDA</h3>
-                        <p>Analyzed retail sales data to identify seasonal patterns and factors affecting weekly sales.
-                            Conducted multivariate analysis and generated business intelligence models.</p>
+                        <p>Explored 45 Walmart stores across 3 years of weekly sales data to surface patterns a standard sales report would miss. Ran 7 targeted SQL business queries covering holiday impact, fuel price sensitivity, CPI correlation, and store-level performance variance. Found that holiday weeks drove disproportionately higher sales — but the effect varied significantly by store, suggesting some locations are better positioned for seasonal demand. Packaged findings into a BI summary for management review.</p>
                         <ul class="project-tech">
                             <li>Python</li>
-                            <li>SQL</li>
-                            <li>Matplotlib</li>
+                            <li>SQLite</li>
                             <li>Seaborn</li>
+                            <li>Matplotlib</li>
+                            <li>Time-Series EDA</li>
                         </ul>
                     </div>
                 </div>
@@ -257,13 +261,13 @@
                     </div>
                     <div class="project-info">
                         <h3>A/B Testing: Landing Page</h3>
-                        <p>Evaluated whether a new landing page design improved user conversion rates compared to
-                            control groups utilizing a Z-test for proportions and generated data-driven recommendations.
-                        </p>
+                        <p>Ran a full hypothesis testing workflow on a landing page experiment covering 290,000+ user sessions. After cleaning misassigned users from the dataset, performed a one-tailed Z-test for proportions. Control conversion: 12.02%, treatment: 11.88%. p-value of 0.189 — no evidence to reject the null hypothesis. The recommendation: do not deploy the new page. The real analytical value was explaining why the result was a meaningful finding, not a failure — and redirecting effort toward the factors that actually drive conversion rather than surface-level visual redesigns.</p>
                         <ul class="project-tech">
                             <li>Python</li>
                             <li>Pandas</li>
-                            <li>Statistical Testing</li>
+                            <li>scipy.stats</li>
+                            <li>Hypothesis Testing</li>
+                            <li>Statistical Inference</li>
                         </ul>
                     </div>
                 </div>
