@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,23 @@
     <meta property="og:image" content="https://sasikumar-19.github.io/Portfolio/portfolio_demo_1776479610115.webp" />
     <meta property="og:url" content="https://sasikumar-19.github.io/Portfolio/" />
     <meta property="og:type" content="website" />
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Person",
+        "name": "Sasi Kumar",
+        "jobTitle": "Data Analyst",
+        "description": "Data Analyst skilled in Python, SQL, and Power BI. Experience driving business insights, creating dashboards, and executing A/B tests.",
+        "url": "https://sasikumar-19.github.io/Portfolio/",
+        "sameAs": [
+            "https://github.com/Sasikumar-19",
+            "https://www.linkedin.com/in/avala-naga-venkata-sasi-kumar-1a9660296/"
+        ],
+        "knowsAbout": ["Data Analysis", "SQL", "Python", "Power BI", "A/B Testing", "Machine Learning"]
+    }
+    </script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,6 +56,11 @@
             <li><a href="#about" class="nav-link">About</a></li>
             <li><a href="#projects" class="nav-link">Projects</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li>
+                <button id="theme-toggle" class="theme-btn" aria-label="Toggle Dark/Light Mode">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+            </li>
         </ul>
         <div class="hamburger">
             <span class="bar"></span>

@@ -152,4 +152,74 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // --- Theme Toggle Logic ---
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (themeToggleBtn) {
+        const themeIcon = themeToggleBtn.querySelector('i');
+        
+        // Check saved theme
+        let isDark = localStorage.getItem('theme') !== 'light';
+        if (!localStorage.getItem('theme')) { 
+            isDark = true; 
+            localStorage.setItem('theme', 'dark'); 
+        }
+
+        const applyTheme = (dark) => {
+            document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+            themeIcon.className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+        };
+
+        applyTheme(isDark);
+
+        themeToggleBtn.addEventListener('click', () => {
+            isDark = !isDark;
+            applyTheme(isDark);
+        });
+    }
+
+    // --- 3D Tilt on Project Cards ---
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    // Check if user prefers reduced motion (accessibility)
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReducedMotion) {
+        projectCards.forEach(card => {
+            let rafId = null;
+
+            card.addEventListener('mousemove', (e) => {
+                if (rafId) cancelAnimationFrame(rafId);
+                rafId = requestAnimationFrame(() => {
+                    const rect = card.getBoundingClientRect();
+                    // Calculate mouse position relative to the center of the card
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
+                    
+                    // Apply a perspective and dynamic rotation
+                    // Max rotation is roughly 12 degrees
+                    card.style.transform = `perspective(900px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg) translateZ(6px)`;
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                if (rafId) cancelAnimationFrame(rafId);
+                // Reset card on leave with a smooth transition
+                card.style.transform = `perspective(900px) rotateY(0deg) rotateX(0deg) translateZ(0px)`;
+                card.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                
+                // Remove transition after it resets so it doesn't lag the mousemove
+                setTimeout(() => {
+                    card.style.transition = '';
+                }, 400);
+            });
+            
+            // Setup initial transition state when entering
+            card.addEventListener('mouseenter', () => {
+                 card.style.transition = 'none'; // Disable CSS transition for snappy JS follow
+            });
+        });
+    }
+
 });

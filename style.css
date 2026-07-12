@@ -13,6 +13,14 @@
     font-family: 'Inter', sans-serif;
 }
 
+[data-theme="light"] {
+    --bg-dark: #f8fafc;
+    --bg-card: rgba(0, 0, 0, 0.03);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --glass-border: rgba(0, 0, 0, 0.1);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -130,6 +138,22 @@ ul {
 .nav-links {
     display: flex;
     gap: 2rem;
+    align-items: center;
+}
+
+.theme-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    padding: 5px;
+}
+
+.theme-btn:hover {
+    color: var(--accent-3);
+    transform: rotate(15deg);
 }
 
 .nav-link {
@@ -394,8 +418,7 @@ section {
 }
 
 .project-card:hover {
-    transform: translateY(-10px);
-    border-color: rgba(255,255,255,0.2);
+    border-color: var(--accent-1);
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
