@@ -62,7 +62,7 @@ ul {
 
 /* Background Blobs (Animations) */
 .bg-shape {
-    position: absolute;
+    position: fixed;
     filter: blur(100px);
     border-radius: 50%;
     z-index: -1;
