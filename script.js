@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitMsg = document.getElementById('submitMsg');
 
     if(contactForm) {
+        /* TEMPORARILY DISABLED AJAX FOR EMAIL ACTIVATION
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault(); // Prevent redirecting to the captcha page permanently
             
@@ -151,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Oops! There was a problem submitting your form");
             });
         });
+        */
     }
 
     // --- Theme Toggle Logic ---
