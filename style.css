@@ -245,7 +245,7 @@ section {
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 25px rgba(37, 99, 235, 0.4);
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.6), 0 15px 25px rgba(37, 99, 235, 0.4);
 }
 
 .btn-secondary {
@@ -257,6 +257,9 @@ section {
 
 .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-3);
+    color: var(--accent-3);
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
     transform: translateY(-3px);
 }
 
@@ -410,16 +413,21 @@ section {
 
 .project-card {
     background: var(--bg-card);
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     overflow: hidden;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     transition: var(--transition-smooth);
 }
 
+[data-theme="light"] .project-card {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .project-card:hover {
-    border-color: var(--accent-1);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    border-color: var(--accent-3);
+    box-shadow: 0 0 30px rgba(14, 165, 233, 0.2), 0 20px 40px rgba(0,0,0,0.4);
 }
 
 .project-image {
@@ -650,7 +658,7 @@ footer p {
         margin-right: auto;
     }
 
-    .about-grid {
+    .about-grid, .contact-grid {
         grid-template-columns: 1fr;
     }
     
@@ -661,6 +669,21 @@ footer p {
     .skills-grid {
         justify-content: center;
     }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-3);
 }
 
 @media screen and (max-width: 768px) {
