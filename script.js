@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Project Filtering Logic ---
     const filterBtns = document.querySelectorAll('.project-tab-btn');
-    const projectCards = document.querySelectorAll('.project-card');
+    const filterableCards = document.querySelectorAll('.project-card');
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const filterValue = btn.getAttribute('data-filter');
 
-            projectCards.forEach(card => {
+            filterableCards.forEach(card => {
                 const categories = card.getAttribute('data-category');
                 
                 if (filterValue === 'all' || (categories && categories.includes(filterValue))) {
