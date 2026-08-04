@@ -75,6 +75,9 @@
         <!-- Home / Hero Section -->
         <section id="hero" class="hero-section hidden-element">
             <div class="hero-content">
+                <div class="status-pill">
+                    <span class="status-dot"></span> Data Analyst — Open to Opportunities
+                </div>
                 <p class="greeting">Hello, I am</p>
                 <h1 class="main-title">Sasi <span class="gradient-text">Kumar</span></h1>
                 <h2 class="sub-title typing-container">Data Analyst</h2>
@@ -87,12 +90,37 @@
                     <a href="sasi_resume.pdf" target="_blank" class="btn btn-secondary">Resume <i class="fa-solid fa-download"></i></a>
                     <a href="#contact" class="btn btn-secondary">Get In Touch</a>
                 </div>
+                <div class="hero-socials">
+                    <a href="https://github.com/Sasikumar-19" target="_blank" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/sasikumar19" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="mailto:anvsasikumar19@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+                </div>
             </div>
             <div class="hero-image-wrapper hidden-element right">
                 <div class="hero-image-glitch">
-                    <!-- Profile image -->
-                    <img src="profile.jpg"
-                        alt="Sasi Kumar" class="hero-img">
+                    <img src="profile.jpg" alt="Sasi Kumar" class="hero-img glass-panel">
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon"><i class="fa-solid fa-cash-register"></i></div>
+                        <div class="stat-num">1M+</div>
+                        <div class="stat-label">Transactions Analyzed</div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                        <div class="stat-num">$1.7M+</div>
+                        <div class="stat-label">Revenue Impact Modeled</div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon"><i class="fa-solid fa-flask"></i></div>
+                        <div class="stat-num">290K+</div>
+                        <div class="stat-label">A/B Sessions Tested</div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="stat-num">8.77</div>
+                        <div class="stat-label">B-Tech CGPA</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -274,10 +302,16 @@
                 <h2>Featured <span class="gradient-text">Projects</span></h2>
                 <div class="heading-line"></div>
             </div>
+            
+            <div class="project-tabs-wrapper hidden-element">
+                <button class="project-tab-btn active" data-filter="all">All Projects</button>
+                <button class="project-tab-btn" data-filter="bi">Dashboards & BI</button>
+                <button class="project-tab-btn" data-filter="stats">Data Science & Stats</button>
+            </div>
 
             <div class="projects-grid">
                 <!-- Project 1: Customer Churn -->
-                <div class="project-card hidden-element up">
+                <div class="project-card glass-panel hidden-element up" data-category="bi">
                     <div class="project-image">
                         <img src="https://github.com/user-attachments/assets/35d5e12e-f51c-4a35-93cb-a3bfad485ebe"
                             alt="Customer Churn Dashboard">
@@ -304,7 +338,7 @@
                 </div>
 
                 <!-- Project 2: Pricing Optimization -->
-                <div class="project-card hidden-element up" style="transition-delay: 100ms;">
+                <div class="project-card glass-panel hidden-element up" data-category="stats" style="transition-delay: 100ms;">
                     <div class="project-image">
                         <img src="https://github.com/user-attachments/assets/9e9aabcf-24c0-4f95-bece-84011612804a"
                             alt="Pricing Optimization Dashboard">
@@ -331,7 +365,7 @@
                 </div>
 
                 <!-- Project 3: E-Commerce -->
-                <div class="project-card hidden-element up" style="transition-delay: 100ms;">
+                <div class="project-card glass-panel hidden-element up" data-category="bi" style="transition-delay: 100ms;">
                     <div class="project-image">
                         <img src="https://github.com/user-attachments/assets/cd69e070-ff9b-4326-9848-6408df255f3e"
                             alt="E-Commerce Dashboard" class="chart-image">
@@ -355,8 +389,8 @@
                     </div>
                 </div>
 
-                <!-- Project 3: EDA -->
-                <div class="project-card hidden-element up" style="transition-delay: 200ms;">
+                <!-- Project 4: EDA -->
+                <div class="project-card glass-panel hidden-element up" data-category="bi stats" style="transition-delay: 200ms;">
                     <div class="project-image">
                         <img src="https://raw.githubusercontent.com/Sasikumar-19/Walmart-Sales-EDA/main/V3_ml_forecasting/8%20Week%20Forecast.jpeg"
                             alt="Walmart Sales Forecasting Chart" class="chart-image">
@@ -380,8 +414,8 @@
                     </div>
                 </div>
 
-                <!-- Project 4: A/B Testing -->
-                <div class="project-card hidden-element up" style="transition-delay: 300ms;">
+                <!-- Project 5: A/B Testing -->
+                <div class="project-card glass-panel hidden-element up" data-category="stats" style="transition-delay: 300ms;">
                     <div class="project-image">
                         <img src="https://raw.githubusercontent.com/Sasikumar-19/AB-Testing-Landing-Page/main/V2_Full_Framework/Bayesian%20Posteriors.jpeg"
                             alt="Bayesian Posteriors Chart" class="chart-image">

@@ -222,4 +222,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
+    // --- Project Filtering Logic ---
+    const filterBtns = document.querySelectorAll('.project-tab-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterBtns.forEach(b => b.classList.remove('active'));
+            // Add active class to clicked button
+            btn.classList.add('active');
+
+            const filterValue = btn.getAttribute('data-filter');
+
+            projectCards.forEach(card => {
+                const categories = card.getAttribute('data-category');
+                
+                if (filterValue === 'all' || (categories && categories.includes(filterValue))) {
+                    card.style.display = 'block';
+                    // Small timeout to allow display:block to apply before animating opacity
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 400); // Wait for transition
+                }
+            });
+        });
+    });
+
 });
