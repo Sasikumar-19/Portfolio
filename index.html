@@ -41,10 +41,8 @@
 </head>
 
 <body>
-    <!-- Background Animated Blobs -->
-    <div class="bg-shape shape-1"></div>
-    <div class="bg-shape shape-2"></div>
-    <div class="bg-shape shape-3"></div>
+    <!-- Background Animated Particles Canvas -->
+    <canvas id="bg-canvas"></canvas>
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -96,9 +94,15 @@
                     <a href="mailto:anvsasikumar19@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
                 </div>
             </div>
-            <div class="hero-image-wrapper hidden-element right">
-                <div class="hero-image-glitch">
-                    <img src="profile.jpg" alt="Sasi Kumar" class="hero-img glass-panel">
+            <div class="hero-visual hidden-element right">
+                <div class="avatar-card glass-panel">
+                    <div class="avatar-glow"></div>
+                    <img src="profile.jpg" alt="Sasi Kumar" class="avatar-img">
+                    <div class="avatar-info">
+                        <h3>Sasi Kumar</h3>
+                        <p>Data Analyst</p>
+                        <span class="badge-education"><i class="fa-solid fa-graduation-cap"></i> B-Tech CSE (CGPA: 8.77)</span>
+                    </div>
                 </div>
                 <div class="stats-grid">
                     <div class="stat-card glass-panel">
@@ -312,130 +316,104 @@
             <div class="projects-grid">
                 <!-- Project 1: Customer Churn -->
                 <div class="project-card glass-panel hidden-element up" data-category="bi">
-                    <div class="project-image">
-                        <img src="https://github.com/user-attachments/assets/35d5e12e-f51c-4a35-93cb-a3bfad485ebe"
-                            alt="Customer Churn Dashboard">
-                        <div class="project-overlay">
-                            <div class="overlay-links">
-                                <a href="https://github.com/Sasikumar-19/Customer_Churn_Analysis_Revnue_Impact_Simulator"
-                                    target="_blank" aria-label="Github"><i class="fa-brands fa-github"></i></a>
-                                <a href="https://customer-churn-analysis-929.streamlit.app/"
-                                    target="_blank" aria-label="Live App"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                            </div>
-                        </div>
+                    <div class="project-card-badge">Power BI & Modeling</div>
+                    <h3 class="project-card-heading"><i class="fa-solid fa-users-slash"></i> Customer Churn Analysis & Revenue Impact Simulator</h3>
+                    <p class="project-card-text">
+                        Identified $1.7M+ in annual revenue lost and ~1,300 high-risk customers with $23K+/month recoverable (simulated on Kaggle telecom dataset). Built a SQL risk scoring model and Power BI dashboard with a 300%+ ROI retention recommendation.
+                    </p>
+                    <div class="project-tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">SQL</span>
+                        <span class="tech-tag">Power BI</span>
+                        <span class="tech-tag">Risk Scoring</span>
                     </div>
-                    <div class="project-info">
-                        <h3>Customer Churn Analysis & Revenue Impact Simulator</h3>
-                        <p>Identified $1.7M+ in annual revenue lost and ~1,300 high-risk customers with $23K+/month recoverable (simulated on Kaggle telecom dataset). Built a SQL risk scoring model and Power BI dashboard with a 300%+ ROI retention recommendation.</p>
-                        <ul class="project-tech">
-                            <li>Python</li>
-                            <li>SQL</li>
-                            <li>Power BI</li>
-                            <li>Risk Scoring</li>
-                            <li>Revenue Impact Modelling</li>
-                        </ul>
+                    <div class="project-card-actions">
+                        <a href="https://customer-churn-analysis-929.streamlit.app/" target="_blank" rel="noopener" class="btn-primary-sm">
+                            <i class="fa-solid fa-play"></i> Live App
+                        </a>
+                        <a href="https://github.com/Sasikumar-19/Customer_Churn_Analysis_Revnue_Impact_Simulator" target="_blank" rel="noopener" class="btn-github-action">
+                            <i class="fa-brands fa-github"></i> GitHub Repo
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 2: Pricing Optimization -->
                 <div class="project-card glass-panel hidden-element up" data-category="stats" style="transition-delay: 100ms;">
-                    <div class="project-image">
-                        <img src="https://github.com/user-attachments/assets/9e9aabcf-24c0-4f95-bece-84011612804a"
-                            alt="Pricing Optimization Dashboard">
-                        <div class="project-overlay">
-                            <div class="overlay-links">
-                                <a href="https://github.com/Sasikumar-19/Pricing-Discount-Optimization-Analysis"
-                                    target="_blank" aria-label="Github"><i class="fa-brands fa-github"></i></a>
-                            </div>
-                        </div>
+                    <div class="project-card-badge">A/B Testing & Stats</div>
+                    <h3 class="project-card-heading"><i class="fa-solid fa-tags"></i> Pricing & Discount Optimization Analysis</h3>
+                    <p class="project-card-text">
+                        Found that margins turn negative beyond a 2.8% discount threshold across 1M+ retail transactions. Modelled price elasticity across 322 categories and A/B validated optimal discount tiers (p&lt;0.001).
+                    </p>
+                    <div class="project-tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">pandas</span>
+                        <span class="tech-tag">scipy.stats</span>
+                        <span class="tech-tag">Power BI</span>
                     </div>
-                    <div class="project-info">
-                        <h3>Pricing & Discount Optimization Analysis</h3>
-                        <p>Found that margins turn negative beyond a 2.8% discount threshold across 1M+ retail transactions. Modelled price elasticity across 322 categories and A/B validated optimal discount tiers (p&lt;0.001).</p>
-                        <ul class="project-tech">
-                            <li>Python</li>
-                            <li>pandas</li>
-                            <li>scipy.stats</li>
-                            <li>SQLite</li>
-                            <li>Power BI</li>
-                            <li>Price Elasticity</li>
-                            <li>A/B Testing</li>
-                        </ul>
+                    <div class="project-card-actions">
+                        <a href="https://github.com/Sasikumar-19/Pricing-Discount-Optimization-Analysis" target="_blank" rel="noopener" class="btn-github-action">
+                            <i class="fa-brands fa-github"></i> GitHub Repo
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 3: E-Commerce -->
                 <div class="project-card glass-panel hidden-element up" data-category="bi" style="transition-delay: 100ms;">
-                    <div class="project-image">
-                        <img src="https://github.com/user-attachments/assets/cd69e070-ff9b-4326-9848-6408df255f3e"
-                            alt="E-Commerce Dashboard" class="chart-image">
-                        <div class="project-overlay">
-                            <div class="overlay-links">
-                                <a href="https://github.com/Sasikumar-19/Olist-Ecommerce-Dashboard"
-                                    target="_blank" aria-label="Github"><i class="fa-brands fa-github"></i></a>
-                            </div>
-                        </div>
+                    <div class="project-card-badge">Power BI & EDA</div>
+                    <h3 class="project-card-heading"><i class="fa-solid fa-chart-column"></i> Olist E-Commerce Dashboards</h3>
+                    <p class="project-card-text">
+                        Merged 7 relational datasets covering 100K+ orders to track revenue, delivery performance, and satisfaction KPIs. Found delivery delays beyond 7 days correlated with a measurable drop in review scores.
+                    </p>
+                    <div class="project-tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Power BI</span>
+                        <span class="tech-tag">Multi-table SQL</span>
+                        <span class="tech-tag">KPI Design</span>
                     </div>
-                    <div class="project-info">
-                        <h3>Olist E-Commerce Dashboards</h3>
-                        <p>Merged 7 relational datasets covering 100K+ orders to track revenue, delivery performance, and satisfaction KPIs. Found delivery delays beyond 7 days correlated with a measurable drop in review scores.</p>
-                        <ul class="project-tech">
-                            <li>Python</li>
-                            <li>Pandas</li>
-                            <li>Power BI</li>
-                            <li>Multi-table SQL</li>
-                            <li>KPI Design</li>
-                        </ul>
+                    <div class="project-card-actions">
+                        <a href="https://github.com/Sasikumar-19/Olist-Ecommerce-Dashboard" target="_blank" rel="noopener" class="btn-github-action">
+                            <i class="fa-brands fa-github"></i> GitHub Repo
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 4: EDA -->
                 <div class="project-card glass-panel hidden-element up" data-category="bi stats" style="transition-delay: 200ms;">
-                    <div class="project-image">
-                        <img src="https://raw.githubusercontent.com/Sasikumar-19/Walmart-Sales-EDA/main/V3_ml_forecasting/8%20Week%20Forecast.jpeg"
-                            alt="Walmart Sales Forecasting Chart" class="chart-image">
-                        <div class="project-overlay">
-                            <div class="overlay-links">
-                                <a href="https://github.com/Sasikumar-19/Walmart-Sales-EDA"
-                                    target="_blank" aria-label="Github"><i class="fa-brands fa-github"></i></a>
-                            </div>
-                        </div>
+                    <div class="project-card-badge">Machine Learning</div>
+                    <h3 class="project-card-heading"><i class="fa-solid fa-cart-shopping"></i> Walmart Sales EDA & ML Forecasting</h3>
+                    <p class="project-card-text">
+                        Upgraded analysis of 45 stores and $6.7B in revenue using PostgreSQL and Plotly. Engineered time-series features to train and compare ML sales forecasting models, finding Gradient Boosting outperformed economic indicators.
+                    </p>
+                    <div class="project-tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                        <span class="tech-tag">Plotly</span>
+                        <span class="tech-tag">Time-Series</span>
                     </div>
-                    <div class="project-info">
-                        <h3>Walmart Sales EDA & ML Forecasting</h3>
-                        <p>Upgraded analysis of 45 stores and $6.7B in revenue using PostgreSQL and Plotly. Engineered time-series features to train and compare ML sales forecasting models, finding Gradient Boosting outperformed economic indicators.</p>
-                        <ul class="project-tech">
-                            <li>Python</li>
-                            <li>PostgreSQL</li>
-                            <li>Plotly</li>
-                            <li>Machine Learning</li>
-                            <li>Time-Series Forecasting</li>
-                        </ul>
+                    <div class="project-card-actions">
+                        <a href="https://github.com/Sasikumar-19/Walmart-Sales-EDA" target="_blank" rel="noopener" class="btn-github-action">
+                            <i class="fa-brands fa-github"></i> GitHub Repo
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 5: A/B Testing -->
                 <div class="project-card glass-panel hidden-element up" data-category="stats" style="transition-delay: 300ms;">
-                    <div class="project-image">
-                        <img src="https://raw.githubusercontent.com/Sasikumar-19/AB-Testing-Landing-Page/main/V2_Full_Framework/Bayesian%20Posteriors.jpeg"
-                            alt="Bayesian Posteriors Chart" class="chart-image">
-                        <div class="project-overlay">
-                            <div class="overlay-links">
-                                <a href="https://github.com/Sasikumar-19/AB-Testing-Landing-Page"
-                                    target="_blank" aria-label="Github"><i class="fa-brands fa-github"></i></a>
-                            </div>
-                        </div>
+                    <div class="project-card-badge">Stats & Inference</div>
+                    <h3 class="project-card-heading"><i class="fa-solid fa-flask-vial"></i> A/B Testing Framework (Frequentist & Bayesian)</h3>
+                    <p class="project-card-text">
+                        Built a complete experimentation framework testing 295K+ sessions. Conducted pre-test power analysis, followed by Frequentist Z-tests and Bayesian inference, proving the new page had only a 68.2% probability of outperforming the control.
+                    </p>
+                    <div class="project-tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Bayesian</span>
+                        <span class="tech-tag">Frequentist</span>
+                        <span class="tech-tag">Power Analysis</span>
                     </div>
-                    <div class="project-info">
-                        <h3>A/B Testing Framework (Frequentist & Bayesian)</h3>
-                        <p>Built a complete experimentation framework testing 295K+ sessions. Conducted pre-test power analysis, followed by Frequentist Z-tests and Bayesian inference, proving the new page had only a 68.2% probability of outperforming the control.</p>
-                        <ul class="project-tech">
-                            <li>Python</li>
-                            <li>Bayesian Inference</li>
-                            <li>Frequentist Statistics</li>
-                            <li>Power Analysis</li>
-                            <li>Multi-Armed Bandit</li>
-                        </ul>
+                    <div class="project-card-actions">
+                        <a href="https://github.com/Sasikumar-19/AB-Testing-Landing-Page" target="_blank" rel="noopener" class="btn-github-action">
+                            <i class="fa-brands fa-github"></i> GitHub Repo
+                        </a>
                     </div>
                 </div>
             </div>
