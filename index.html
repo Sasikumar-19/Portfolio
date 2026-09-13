@@ -331,8 +331,11 @@
                         <span class="tech-tag">Risk Scoring</span>
                     </div>
                     <div class="project-card-actions">
-                        <a href="https://customer-churn-analysis-929.streamlit.app/" target="_blank" rel="noopener" class="btn-primary-sm">
-                            <i class="fa-solid fa-play"></i> Live App
+                        <button class="btn-primary-sm switch-case-btn" data-target="case-study-churn">
+                            <i class="fa-solid fa-play"></i> Open Live Demo
+                        </button>
+                        <a href="https://customer-churn-analysis-929.streamlit.app/" target="_blank" rel="noopener" class="btn-github-action">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Full App
                         </a>
                         <a href="https://github.com/Sasikumar-19/Customer_Churn_Analysis_Revnue_Impact_Simulator" target="_blank" rel="noopener" class="btn-github-action">
                             <i class="fa-brands fa-github"></i> GitHub Repo
@@ -355,8 +358,11 @@
                         <span class="tech-tag">Plotly</span>
                     </div>
                     <div class="project-card-actions">
-                        <a href="https://finance-audit.streamlit.app/" target="_blank" rel="noopener" class="btn-primary-sm">
-                            <i class="fa-solid fa-play"></i> Live App
+                        <button class="btn-primary-sm switch-case-btn" data-target="case-study-finance">
+                            <i class="fa-solid fa-play"></i> Open Live Demo
+                        </button>
+                        <a href="https://finance-audit.streamlit.app/" target="_blank" rel="noopener" class="btn-github-action">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Full App
                         </a>
                         <a href="https://github.com/Sasikumar-19/Personal_Finance_Audit" target="_blank" rel="noopener" class="btn-github-action">
                             <i class="fa-brands fa-github"></i> GitHub Repo
@@ -444,6 +450,174 @@
                     </div>
                 </div>
             </div>
+
+      <!-- ═══ INTERACTIVE CASE STUDIES ═══ -->
+      <div class="featured-case-study-container">
+
+        <!-- Case Study: Personal Finance Audit -->
+        <div class="case-study-block hidden" id="case-study-finance">
+          <div class="case-study-header glass-panel">
+            <div>
+              <h3 class="case-study-title"><i class="fa-solid fa-wallet"></i> Case Study: Personal Finance Anomaly &amp; Lifestyle Audit</h3>
+              <p class="case-study-sub">IsolationForest Anomaly Detection · K-Means Persona Clustering · Savings Engine</p>
+            </div>
+            <a href="https://github.com/Sasikumar-19/Personal_Finance_Audit" target="_blank" rel="noopener" class="btn-github-action"><i class="fa-brands fa-github"></i> Full Repository</a>
+          </div>
+
+          <div class="slicers-bar glass-panel">
+            <div class="slicers-header"><i class="fa-solid fa-sliders"></i> <strong>Dynamic Filters:</strong> <span class="slicer-tip">Adjust filters to recalculate KPIs &amp; charts</span></div>
+            <div class="slicers-grid">
+              <div class="slicer-group">
+                <label for="fin-filter-month"><i class="fa-regular fa-calendar"></i> Month:</label>
+                <select id="fin-filter-month" class="custom-select">
+                  <option value="all">All Months</option>
+                  <option value="0">January</option>
+                  <option value="1">February</option>
+                  <option value="2">March</option>
+                  <option value="3">April</option>
+                  <option value="4">May</option>
+                  <option value="5">June</option>
+                </select>
+              </div>
+              <div class="slicer-group">
+                <label for="fin-filter-category"><i class="fa-solid fa-tags"></i> Category:</label>
+                <select id="fin-filter-category" class="custom-select">
+                  <option value="all">All Categories</option>
+                  <option value="Food & Dining">Food &amp; Dining</option>
+                  <option value="Transport">Transport</option>
+                  <option value="Shopping">Shopping</option>
+                  <option value="Bills & Rent">Bills &amp; Rent</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Health">Health</option>
+                  <option value="Education">Education</option>
+                  <option value="Travel">Travel</option>
+                  <option value="UPI Transfer">UPI Transfer</option>
+                </select>
+              </div>
+              <div class="slicer-group">
+                <label for="fin-filter-anomaly"><i class="fa-solid fa-triangle-exclamation"></i> Show:</label>
+                <select id="fin-filter-anomaly" class="custom-select">
+                  <option value="all">All Transactions</option>
+                  <option value="anomaly">🚨 Anomalies Only</option>
+                  <option value="normal">Normal Only</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi-card"><span class="kpi-title">Total Spend</span><span class="kpi-value" id="fin-kpi-total">₹0</span><span class="kpi-sub">Filtered Period</span></div>
+            <div class="kpi-card"><span class="kpi-title">Avg Monthly</span><span class="kpi-value" id="fin-kpi-avg">₹0</span><span class="kpi-sub">6-Month Average</span></div>
+            <div class="kpi-card"><span class="kpi-title">Anomalies Detected</span><span class="kpi-value" id="fin-kpi-anomalies">0</span><span class="kpi-sub">IsolationForest (5%)</span></div>
+            <div class="kpi-card"><span class="kpi-title">Savings Potential</span><span class="kpi-value" id="fin-kpi-savings">₹0</span><span class="kpi-sub">~12% Optimisation</span></div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-box glass-panel"><h4>Spending by Category</h4><div class="chart-canvas-wrap"><canvas id="fin-donut-chart"></canvas></div></div>
+            <div class="chart-box glass-panel"><h4>Monthly Trend (Normal vs Anomaly)</h4><div class="chart-canvas-wrap"><canvas id="fin-trend-chart"></canvas></div></div>
+          </div>
+
+          <div class="dashboard-section glass-panel">
+            <h4><i class="fa-solid fa-brain"></i> K-Means Spending Personas</h4>
+            <p style="color:var(--text-secondary);margin-bottom:1rem;">Each month clustered into a spending persona based on category-level spend patterns.</p>
+            <div class="persona-grid" id="fin-persona-cards"></div>
+          </div>
+
+          <div class="dashboard-section glass-panel">
+            <h4><i class="fa-solid fa-triangle-exclamation"></i> Flagged Anomalous Transactions</h4>
+            <div class="table-responsive">
+              <table class="sql-table">
+                <thead><tr><th>Date</th><th>Amount</th><th>Category</th><th>Description</th><th>Status</th></tr></thead>
+                <tbody id="fin-anomaly-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study: Customer Churn Analysis -->
+        <div class="case-study-block hidden" id="case-study-churn">
+          <div class="case-study-header glass-panel">
+            <div>
+              <h3 class="case-study-title"><i class="fa-solid fa-users-slash"></i> Case Study: Customer Churn &amp; Revenue Impact Simulator</h3>
+              <p class="case-study-sub">SQL Risk Scoring · Power BI Dashboard · ROI Retention Model (7,043 customers)</p>
+            </div>
+            <a href="https://github.com/Sasikumar-19/Customer_Churn_Analysis_Revnue_Impact_Simulator" target="_blank" rel="noopener" class="btn-github-action"><i class="fa-brands fa-github"></i> Full Repository</a>
+          </div>
+
+          <div class="slicers-bar glass-panel">
+            <div class="slicers-header"><i class="fa-solid fa-sliders"></i> <strong>Dashboard Filters:</strong></div>
+            <div class="slicers-grid">
+              <div class="slicer-group">
+                <label for="churn-filter-contract"><i class="fa-solid fa-file-contract"></i> Contract:</label>
+                <select id="churn-filter-contract" class="custom-select">
+                  <option value="all">All Contracts</option>
+                  <option value="Month-to-month">Month-to-month</option>
+                  <option value="One year">One year</option>
+                  <option value="Two year">Two year</option>
+                </select>
+              </div>
+              <div class="slicer-group">
+                <label for="churn-filter-tier"><i class="fa-solid fa-shield-halved"></i> Risk Tier:</label>
+                <select id="churn-filter-tier" class="custom-select">
+                  <option value="all">All Tiers</option>
+                  <option value="High Risk">🔴 High Risk</option>
+                  <option value="Medium Risk">🟡 Medium Risk</option>
+                  <option value="Low Risk">🟢 Low Risk</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi-card kpi-red"><span class="kpi-title">Churn Rate</span><span class="kpi-value" id="churn-kpi-rate">26.5%</span><span class="kpi-sub">1,869 of 7,043 lost</span></div>
+            <div class="kpi-card kpi-amber"><span class="kpi-title">Annual Revenue Lost</span><span class="kpi-value" id="churn-kpi-rev">$1,669,570</span><span class="kpi-sub">Churned × Avg Monthly × 12</span></div>
+            <div class="kpi-card kpi-blue"><span class="kpi-title">High Risk Active</span><span class="kpi-value" id="churn-kpi-highrisk">296</span><span class="kpi-sub">Saveable Customers</span></div>
+            <div class="kpi-card kpi-green"><span class="kpi-title">Recoverable</span><span class="kpi-value" id="churn-kpi-recover">$23,386/mo</span><span class="kpi-sub">Monthly Revenue</span></div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-box glass-panel"><h4>Risk Tier Distribution</h4><div class="chart-canvas-wrap"><canvas id="churn-donut-chart"></canvas></div></div>
+            <div class="chart-box glass-panel"><h4>Churn Rate by Contract Type</h4><div class="chart-canvas-wrap"><canvas id="churn-contract-chart"></canvas></div></div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-box chart-box-full glass-panel"><h4>Churn Rate vs Tenure (Early Churn Cliff)</h4><div class="chart-canvas-wrap"><canvas id="churn-tenure-chart"></canvas></div></div>
+          </div>
+
+          <div class="dashboard-section glass-panel">
+            <h4><i class="fa-solid fa-table"></i> Top High-Risk Active Customers (Score 9/10)</h4>
+            <div class="table-responsive">
+              <table class="sql-table">
+                <thead><tr><th>Customer ID</th><th>Contract</th><th>Tenure</th><th>Monthly $</th><th>Internet</th><th>Risk Score</th><th>Status</th></tr></thead>
+                <tbody id="churn-risk-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="dashboard-section glass-panel">
+            <h4><i class="fa-solid fa-calculator"></i> ROI Retention Simulator</h4>
+            <p style="color:var(--text-secondary);margin-bottom:1.5rem;">Adjust levers to model the return on a customer retention intervention targeting 296 high-risk active customers.</p>
+            <div class="roi-sliders">
+              <div class="roi-slider-group">
+                <label>Retention Success Rate: <strong id="churn-ret-val">30%</strong></label>
+                <input type="range" id="churn-retention-rate" min="5" max="80" value="30" step="5">
+              </div>
+              <div class="roi-slider-group">
+                <label>Cost per Customer: <strong id="churn-cost-val">$10</strong></label>
+                <input type="range" id="churn-cost-per-cust" min="0" max="100" value="10" step="5">
+              </div>
+            </div>
+            <div class="kpi-row roi-results">
+              <div class="kpi-card"><span class="kpi-title">Customers Retained</span><span class="kpi-value" id="roi-retained">89</span></div>
+              <div class="kpi-card"><span class="kpi-title">Revenue Saved (24mo)</span><span class="kpi-value" id="roi-revenue">$0</span></div>
+              <div class="kpi-card"><span class="kpi-title">Intervention Cost</span><span class="kpi-value" id="roi-cost">$0</span></div>
+              <div class="kpi-card"><span class="kpi-title">ROI</span><span class="kpi-value" id="roi-pct">0%</span></div>
+            </div>
+            <div class="roi-recommendation" id="roi-recommendation"></div>
+          </div>
+        </div>
+
+      </div>
         </section>
 
         <!-- Contact Section -->
@@ -495,7 +669,9 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
+    <script src="case-studies.js"></script>
 </body>
 
 </html>
