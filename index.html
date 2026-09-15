@@ -464,6 +464,18 @@
             <a href="https://github.com/Sasikumar-19/Personal_Finance_Audit" target="_blank" rel="noopener" class="btn-github-action"><i class="fa-brands fa-github"></i> Full Repository</a>
           </div>
 
+          <div class="upload-section glass-panel">
+            <div class="upload-content">
+              <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+              <h4>Try With Your Own Data</h4>
+              <p>Upload your bank/UPI statement (CSV) to see your personalised spending analysis. Supports SBI, HDFC, ICICI, Axis, PhonePe, Paytm &amp; more.</p>
+              <label for="fin-file-upload" class="btn-primary-sm upload-btn"><i class="fa-solid fa-file-csv"></i> Upload CSV File</label>
+              <input type="file" id="fin-file-upload" accept=".csv" style="display:none;">
+              <span class="upload-status" id="fin-upload-status"></span>
+              <p class="upload-note"><i class="fa-solid fa-lock"></i> 100% client-side. Your data never leaves your browser.</p>
+            </div>
+          </div>
+
           <div class="slicers-bar glass-panel">
             <div class="slicers-header"><i class="fa-solid fa-sliders"></i> <strong>Dynamic Filters:</strong> <span class="slicer-tip">Adjust filters to recalculate KPIs &amp; charts</span></div>
             <div class="slicers-grid">
@@ -532,6 +544,16 @@
               </table>
             </div>
           </div>
+
+          <div class="dashboard-section glass-panel">
+            <h4><i class="fa-solid fa-lightbulb"></i> Personalised Savings Recommendations</h4>
+            <div class="savings-tips" id="fin-savings-tips">
+              <div class="savings-tip tip-high"><span class="tip-badge">🔴 High</span><strong>Food &amp; Dining</strong> — 18.2% of total spend. A 10% cut saves ₹2,780/year. Try cooking 3x/week.</div>
+              <div class="savings-tip tip-high"><span class="tip-badge">🔴 High</span><strong>Monthly Budget</strong> — 2 High Spender months detected (May, Mar). Set a spending alert at ₹34,775/month.</div>
+              <div class="savings-tip tip-medium"><span class="tip-badge">🟡 Medium</span><strong>Subscriptions</strong> — ₹524/month on entertainment. Audit subscriptions — save ₹157/month.</div>
+              <div class="savings-tip tip-opportunity"><span class="tip-badge">🟢 Opportunity</span><strong>Savings Potential</strong> — Matching Saver months year-round saves ₹1,15,500/year.</div>
+            </div>
+          </div>
         </div>
 
         <!-- Case Study: Customer Churn Analysis -->
@@ -545,25 +567,36 @@
           </div>
 
           <div class="slicers-bar glass-panel">
-            <div class="slicers-header"><i class="fa-solid fa-sliders"></i> <strong>Dashboard Filters:</strong></div>
-            <div class="slicers-grid">
-              <div class="slicer-group">
-                <label for="churn-filter-contract"><i class="fa-solid fa-file-contract"></i> Contract:</label>
-                <select id="churn-filter-contract" class="custom-select">
-                  <option value="all">All Contracts</option>
-                  <option value="Month-to-month">Month-to-month</option>
-                  <option value="One year">One year</option>
-                  <option value="Two year">Two year</option>
-                </select>
+            <div class="slicers-row">
+              <div class="slicers-main">
+                <div class="slicers-header"><i class="fa-solid fa-sliders"></i> <strong>Dashboard Filters:</strong></div>
+                <div class="slicers-grid">
+                  <div class="slicer-group">
+                    <label for="churn-filter-contract"><i class="fa-solid fa-file-contract"></i> Contract:</label>
+                    <select id="churn-filter-contract" class="custom-select">
+                      <option value="all">All Contracts</option>
+                      <option value="Month-to-month">Month-to-month</option>
+                      <option value="One year">One year</option>
+                      <option value="Two year">Two year</option>
+                    </select>
+                  </div>
+                  <div class="slicer-group">
+                    <label for="churn-filter-tier"><i class="fa-solid fa-shield-halved"></i> Risk Tier:</label>
+                    <select id="churn-filter-tier" class="custom-select">
+                      <option value="all">All Tiers</option>
+                      <option value="High Risk">🔴 High Risk</option>
+                      <option value="Medium Risk">🟡 Medium Risk</option>
+                      <option value="Low Risk">🟢 Low Risk</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div class="slicer-group">
-                <label for="churn-filter-tier"><i class="fa-solid fa-shield-halved"></i> Risk Tier:</label>
-                <select id="churn-filter-tier" class="custom-select">
-                  <option value="all">All Tiers</option>
-                  <option value="High Risk">🔴 High Risk</option>
-                  <option value="Medium Risk">🟡 Medium Risk</option>
-                  <option value="Low Risk">🟢 Low Risk</option>
-                </select>
+              <div class="churn-note">
+                <div class="churn-note-icon"><i class="fa-solid fa-circle-info"></i></div>
+                <div>
+                  <strong>What is Churn?</strong>
+                  <p>Customer churn is when a paying customer stops using a service. A 26.5% churn rate means ~1 in 4 customers left, representing $1.7M+ in lost annual revenue. This dashboard analyses why they leave and how to retain them.</p>
+                </div>
               </div>
             </div>
           </div>

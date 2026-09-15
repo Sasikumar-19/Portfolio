@@ -110,13 +110,89 @@ function initFinanceDashboard() {
   const filterMonth = document.getElementById('fin-filter-month');
   const filterCat = document.getElementById('fin-filter-category');
   const filterAnomaly = document.getElementById('fin-filter-anomaly');
+  const fileInput = document.getElementById('fin-file-upload');
+
   if (!filterMonth) return; // guard if HTML not loaded
 
   filterMonth.addEventListener('change', updateFinanceDashboard);
   filterCat.addEventListener('change', updateFinanceDashboard);
   filterAnomaly.addEventListener('change', updateFinanceDashboard);
 
+  if (fileInput) {
+    fileInput.addEventListener('change', handleFinanceFileUpload);
+  }
+
   updateFinanceDashboard();
+}
+
+function handleFinanceFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const statusEl = document.getElementById('fin-upload-status');
+  statusEl.textContent = '⏳ Processing ' + file.name + '...';
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      const text = evt.target.result;
+      const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (lines.length < 2) {
+        statusEl.textContent = '⚠️ CSV file seems empty.';
+        return;
+      }
+
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ''));
+      const dateIdx = headers.findIndex(h => h.includes('date') || h.includes('time') || h.includes('txn'));
+      const amtIdx = headers.findIndex(h => h.includes('amount') || h.includes('debit') || h.includes('spend') || h.includes('value'));
+      const catIdx = headers.findIndex(h => h.includes('category') || h.includes('type') || h.includes('tag'));
+      const descIdx = headers.findIndex(h => h.includes('desc') || h.includes('narration') || h.includes('remarks') || h.includes('particulars'));
+
+      const parsedData = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+        if (cols.length < 2) continue;
+
+        let dateStr = dateIdx !== -1 && cols[dateIdx] ? cols[dateIdx] : '2025-01-15';
+        let amtStr = amtIdx !== -1 && cols[amtIdx] ? cols[amtIdx] : cols[1];
+        let amount = parseFloat(amtStr.replace(/[^0-9.]/g, '')) || 0;
+        if (amount <= 0) continue;
+
+        let category = catIdx !== -1 && cols[catIdx] ? cols[catIdx] : 'Food & Dining';
+        if (!FINANCE_CATEGORIES.includes(category)) {
+          const catLower = category.toLowerCase();
+          if (catLower.includes('food') || catLower.includes('zomato') || catLower.includes('swiggy') || catLower.includes('restaurant')) category = 'Food & Dining';
+          else if (catLower.includes('uber') || catLower.includes('travel') || catLower.includes('flight') || catLower.includes('cab')) category = 'Travel';
+          else if (catLower.includes('shop') || catLower.includes('amazon') || catLower.includes('flipkart')) category = 'Shopping';
+          else if (catLower.includes('rent') || catLower.includes('bill') || catLower.includes('electr')) category = 'Bills & Rent';
+          else if (catLower.includes('ent') || catLower.includes('movie') || catLower.includes('netflix')) category = 'Entertainment';
+          else if (catLower.includes('health') || catLower.includes('med') || catLower.includes('pharma')) category = 'Health';
+          else category = 'UPI Transfer';
+        }
+
+        let desc = descIdx !== -1 && cols[descIdx] ? cols[descIdx] : 'Uploaded Transaction';
+        parsedData.push({
+          date: dateStr,
+          amount: amount,
+          category: category,
+          desc: desc,
+          anomaly: amount > 12000
+        });
+      }
+
+      if (parsedData.length > 0) {
+        FINANCE_DATA.length = 0;
+        FINANCE_DATA.push(...parsedData);
+        updateFinanceDashboard();
+        statusEl.textContent = `✅ Successfully analyzed ${parsedData.length} transactions from "${file.name}"!`;
+      } else {
+        statusEl.textContent = '⚠️ Could not extract valid transactions from CSV.';
+      }
+    } catch (err) {
+      statusEl.textContent = '❌ Error parsing file: ' + err.message;
+    }
+  };
+  reader.readAsText(file);
 }
 
 function getFilteredFinanceData() {
