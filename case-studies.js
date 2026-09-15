@@ -134,10 +134,47 @@ function parseTxnDate(raw) {
   return { year, month, monthKey, monthLabel, dateStr };
 }
 
+const HIGH_SPENDER_DATA = [
+  { date:'2025-01-04', amount:5500, category:'Food & Dining', desc:'Gourmet Fine Dining', anomaly:false },
+  { date:'2025-01-12', amount:28000, category:'Shopping', desc:'Designer Apparel Purchase', anomaly:true },
+  { date:'2025-01-18', amount:12000, category:'Bills & Rent', desc:'Luxury Apartment Rent', anomaly:false },
+  { date:'2025-01-25', amount:4200, category:'Entertainment', desc:'VIP Concert Tickets', anomaly:false },
+  { date:'2025-02-05', amount:8500, category:'Food & Dining', desc:'Weekend Clubbing & Drinks', anomaly:false },
+  { date:'2025-02-14', amount:45000, category:'Travel', desc:'Dubai Luxury Resort Booking', anomaly:true },
+  { date:'2025-02-22', amount:6800, category:'Shopping', desc:'Luxury Perfumes', anomaly:false },
+  { date:'2025-03-03', amount:14000, category:'UPI Transfer', desc:'Unplanned UPI Transfer', anomaly:true },
+  { date:'2025-03-15', amount:12000, category:'Bills & Rent', desc:'Rent + Maintenance', anomaly:false },
+  { date:'2025-03-28', amount:32000, category:'Shopping', desc:'High-end Smartphone Tech', anomaly:true },
+  { date:'2025-04-10', amount:9500, category:'Food & Dining', desc:'Swiggy Premium Orders', anomaly:false },
+  { date:'2025-04-20', amount:12000, category:'Bills & Rent', desc:'Rent', anomaly:false },
+  { date:'2025-05-02', amount:58000, category:'Travel', desc:'International Maldives Trip', anomaly:true },
+  { date:'2025-05-18', amount:12000, category:'Bills & Rent', desc:'Rent', anomaly:false },
+  { date:'2025-06-12', amount:25000, category:'UPI Transfer', desc:'Impulse Crypto/Stock Transfer', anomaly:true },
+];
+
+const SAVER_DATA = [
+  { date:'2025-01-05', amount:1800, category:'Food & Dining', desc:'Groceries & Essentials', anomaly:false },
+  { date:'2025-01-10', amount:600, category:'Transport', desc:'Monthly Metro Pass', anomaly:false },
+  { date:'2025-01-15', amount:7500, category:'Bills & Rent', desc:'Shared Rent', anomaly:false },
+  { date:'2025-01-20', amount:399, category:'Entertainment', desc:'Basic Streaming Sub', anomaly:false },
+  { date:'2025-02-04', amount:1950, category:'Food & Dining', desc:'Home Cooking Groceries', anomaly:false },
+  { date:'2025-02-12', amount:600, category:'Transport', desc:'Metro Pass', anomaly:false },
+  { date:'2025-02-18', amount:7500, category:'Bills & Rent', desc:'Rent + Utilities', anomaly:false },
+  { date:'2025-03-05', amount:2100, category:'Food & Dining', desc:'Supermarket Bill', anomaly:false },
+  { date:'2025-03-14', amount:7500, category:'Bills & Rent', desc:'Rent', anomaly:false },
+  { date:'2025-04-03', amount:1750, category:'Food & Dining', desc:'Groceries', anomaly:false },
+  { date:'2025-04-15', amount:7500, category:'Bills & Rent', desc:'Rent', anomaly:false },
+  { date:'2025-05-06', amount:2200, category:'Food & Dining', desc:'Blinkit & Market', anomaly:false },
+  { date:'2025-05-18', amount:7500, category:'Bills & Rent', desc:'Rent', anomaly:false },
+  { date:'2025-06-05', amount:1900, category:'Food & Dining', desc:'Groceries', anomaly:false },
+  { date:'2025-06-15', amount:7500, category:'Bills & Rent', desc:'Rent', anomaly:false },
+];
+
 function initFinanceDashboard() {
   const filterMonth = document.getElementById('fin-filter-month');
   const filterCat = document.getElementById('fin-filter-category');
   const filterAnomaly = document.getElementById('fin-filter-anomaly');
+  const presetSelect = document.getElementById('fin-preset-scenario');
   const fileInput = document.getElementById('fin-file-upload');
 
   if (!filterMonth) return;
@@ -145,6 +182,18 @@ function initFinanceDashboard() {
   filterMonth.addEventListener('change', updateFinanceDashboard);
   filterCat.addEventListener('change', updateFinanceDashboard);
   filterAnomaly.addEventListener('change', updateFinanceDashboard);
+
+  if (presetSelect) {
+    presetSelect.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val === 'high-spender') FINANCE_DATA = [...HIGH_SPENDER_DATA];
+      else if (val === 'saver') FINANCE_DATA = [...SAVER_DATA];
+      else FINANCE_DATA = [...DEFAULT_FINANCE_DATA];
+
+      syncFinanceFilterDropdowns();
+      updateFinanceDashboard();
+    });
+  }
 
   if (fileInput) {
     fileInput.addEventListener('change', handleFinanceFileUpload);

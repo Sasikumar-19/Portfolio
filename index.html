@@ -464,46 +464,27 @@
             <a href="https://github.com/Sasikumar-19/Personal_Finance_Audit" target="_blank" rel="noopener" class="btn-github-action"><i class="fa-brands fa-github"></i> Full Repository</a>
           </div>
 
-          <div class="upload-section glass-panel">
-            <div class="upload-content">
-              <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-              <h4>Try With Your Own Data</h4>
-              <p>Upload your bank/UPI statement (CSV) to see your personalised spending analysis. Supports SBI, HDFC, ICICI, Axis, PhonePe, Paytm &amp; more.</p>
-              <label for="fin-file-upload" class="btn-primary-sm upload-btn"><i class="fa-solid fa-file-csv"></i> Upload CSV File</label>
-              <input type="file" id="fin-file-upload" accept=".csv" style="display:none;">
-              <span class="upload-status" id="fin-upload-status"></span>
-              <p class="upload-note"><i class="fa-solid fa-lock"></i> 100% client-side. Your data never leaves your browser.</p>
-            </div>
-          </div>
-
           <div class="slicers-bar glass-panel">
-            <div class="slicers-header"><i class="fa-solid fa-sliders"></i> <strong>Dynamic Filters:</strong> <span class="slicer-tip">Adjust filters to recalculate KPIs &amp; charts</span></div>
+            <div class="slicers-header"><i class="fa-solid fa-sliders"></i> <strong>Dynamic Scenario &amp; Filters:</strong> <span class="slicer-tip">Select sample dataset or adjust filters</span></div>
             <div class="slicers-grid">
+              <div class="slicer-group">
+                <label for="fin-preset-scenario"><i class="fa-solid fa-chart-pie"></i> Sample Profile:</label>
+                <select id="fin-preset-scenario" class="custom-select">
+                  <option value="standard">📊 Standard Audit (6 Months)</option>
+                  <option value="high-spender">🔴 High Spender Scenario</option>
+                  <option value="saver">🟢 Frugal Saver Scenario</option>
+                </select>
+              </div>
               <div class="slicer-group">
                 <label for="fin-filter-month"><i class="fa-regular fa-calendar"></i> Month:</label>
                 <select id="fin-filter-month" class="custom-select">
                   <option value="all">All Months</option>
-                  <option value="0">January</option>
-                  <option value="1">February</option>
-                  <option value="2">March</option>
-                  <option value="3">April</option>
-                  <option value="4">May</option>
-                  <option value="5">June</option>
                 </select>
               </div>
               <div class="slicer-group">
                 <label for="fin-filter-category"><i class="fa-solid fa-tags"></i> Category:</label>
                 <select id="fin-filter-category" class="custom-select">
                   <option value="all">All Categories</option>
-                  <option value="Food & Dining">Food &amp; Dining</option>
-                  <option value="Transport">Transport</option>
-                  <option value="Shopping">Shopping</option>
-                  <option value="Bills & Rent">Bills &amp; Rent</option>
-                  <option value="Entertainment">Entertainment</option>
-                  <option value="Health">Health</option>
-                  <option value="Education">Education</option>
-                  <option value="Travel">Travel</option>
-                  <option value="UPI Transfer">UPI Transfer</option>
                 </select>
               </div>
               <div class="slicer-group">
