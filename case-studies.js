@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
    CASE STUDY 1: PERSONAL FINANCE AUDIT
    ═══════════════════════════════════════════════════════════════ */
 
-const FINANCE_DATA = [
+let DEFAULT_FINANCE_DATA = [
   { date:'2025-01-05', amount:2450, category:'Food & Dining', desc:'Swiggy Orders', anomaly:false },
   { date:'2025-01-08', amount:1200, category:'Transport', desc:'Uber Rides', anomaly:false },
   { date:'2025-01-12', amount:4500, category:'Shopping', desc:'Amazon Purchase', anomaly:false },
@@ -89,6 +89,8 @@ const FINANCE_DATA = [
   { date:'2025-06-28', amount:18500, category:'UPI Transfer', desc:'Duplicate UPI Charge', anomaly:true },
 ];
 
+let FINANCE_DATA = [...DEFAULT_FINANCE_DATA];
+
 const FINANCE_CATEGORIES = ['Food & Dining','Transport','Shopping','Bills & Rent','Entertainment','Health','Education','Travel','UPI Transfer','Others'];
 const FINANCE_CAT_COLORS = {
   'Food & Dining':'#E74C3C','Transport':'#3498DB','Shopping':'#9B59B6',
@@ -96,15 +98,41 @@ const FINANCE_CAT_COLORS = {
   'Education':'#2980B9','Travel':'#F39C12','UPI Transfer':'#EC407A','Others':'#95A5A6'
 };
 
-const FINANCE_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun'];
-const PERSONA_DATA = {
-  months: ['Jan','Feb','Mar','Apr','May','Jun'],
-  personas: ['🟢 Saver','🔵 Balanced','🔵 Balanced','🔵 Balanced','🔴 High Spender','🔵 Balanced'],
-  totals: [28299, 29700, 39550, 22054, 49500, 38049],
-};
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 let financeDonutChart = null;
 let financeTrendChart = null;
+
+// Helper to parse dates robustly from DD/MM/YYYY, YYYY-MM-DD, DD-MM-YYYY, etc.
+function parseTxnDate(raw) {
+  if (!raw) return { year: 2025, month: 0, monthKey: 'Jan 2025', monthLabel: 'Jan', dateStr: '2025-01-01' };
+  raw = String(raw).trim();
+  
+  let d = new Date(raw);
+  // Check if DD/MM/YYYY or DD-MM-YYYY format
+  if (isNaN(d.getTime())) {
+    const parts = raw.split(/[\/\-\.\s]/);
+    if (parts.length >= 3) {
+      let day = parseInt(parts[0]);
+      let month = parseInt(parts[1]) - 1;
+      let year = parseInt(parts[2]);
+      if (year < 100) year += 2000;
+      d = new Date(year, month, day);
+    }
+  }
+  
+  if (isNaN(d.getTime())) {
+    d = new Date();
+  }
+
+  const year = d.getFullYear();
+  const month = d.getMonth();
+  const monthLabel = MONTH_NAMES[month];
+  const monthKey = `${monthLabel} ${year}`;
+  const dateStr = d.toISOString().split('T')[0];
+
+  return { year, month, monthKey, monthLabel, dateStr };
+}
 
 function initFinanceDashboard() {
   const filterMonth = document.getElementById('fin-filter-month');
@@ -112,7 +140,7 @@ function initFinanceDashboard() {
   const filterAnomaly = document.getElementById('fin-filter-anomaly');
   const fileInput = document.getElementById('fin-file-upload');
 
-  if (!filterMonth) return; // guard if HTML not loaded
+  if (!filterMonth) return;
 
   filterMonth.addEventListener('change', updateFinanceDashboard);
   filterCat.addEventListener('change', updateFinanceDashboard);
@@ -122,7 +150,40 @@ function initFinanceDashboard() {
     fileInput.addEventListener('change', handleFinanceFileUpload);
   }
 
+  syncFinanceFilterDropdowns();
   updateFinanceDashboard();
+}
+
+// Dynamically sync filter dropdown options based on current dataset
+function syncFinanceFilterDropdowns() {
+  const filterMonth = document.getElementById('fin-filter-month');
+  const filterCat = document.getElementById('fin-filter-category');
+
+  if (!filterMonth || !filterCat) return;
+
+  const selMonth = filterMonth.value;
+  const selCat = filterCat.value;
+
+  const monthsMap = new Map();
+  FINANCE_DATA.forEach(t => {
+    const p = parseTxnDate(t.date);
+    if (!monthsMap.has(p.monthKey)) {
+      monthsMap.set(p.monthKey, { label: p.monthKey, monthIdx: p.month, year: p.year });
+    }
+  });
+
+  const sortedMonths = Array.from(monthsMap.values()).sort((a, b) => (a.year * 12 + a.monthIdx) - (b.year * 12 + b.monthIdx));
+
+  filterMonth.innerHTML = '<option value="all">All Months</option>' +
+    sortedMonths.map(m => `<option value="${m.label}">${m.label}</option>`).join('');
+
+  if (monthsMap.has(selMonth)) filterMonth.value = selMonth;
+
+  const catsInUse = Array.from(new Set(FINANCE_DATA.map(t => t.category)));
+  filterCat.innerHTML = '<option value="all">All Categories</option>' +
+    catsInUse.map(c => `<option value="${c}">${c}</option>`).join('');
+
+  if (catsInUse.includes(selCat)) filterCat.value = selCat;
 }
 
 function handleFinanceFileUpload(e) {
@@ -142,70 +203,95 @@ function handleFinanceFileUpload(e) {
         return;
       }
 
-      const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ''));
-      const dateIdx = headers.findIndex(h => h.includes('date') || h.includes('time') || h.includes('txn'));
-      const amtIdx = headers.findIndex(h => h.includes('amount') || h.includes('debit') || h.includes('spend') || h.includes('value'));
-      const catIdx = headers.findIndex(h => h.includes('category') || h.includes('type') || h.includes('tag'));
-      const descIdx = headers.findIndex(h => h.includes('desc') || h.includes('narration') || h.includes('remarks') || h.includes('particulars'));
+      const sampleLine = lines[0];
+      const delimiter = sampleLine.includes(';') && !sampleLine.includes(',') ? ';' : ',';
+
+      const rawHeaders = lines[0].split(delimiter).map(h => h.trim().replace(/^"|"$/g, ''));
+      const headers = rawHeaders.map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
+
+      const dateIdx = headers.findIndex(h => h.includes('date') || h.includes('time') || h.includes('txn') || h.includes('val'));
+      const amtIdx = headers.findIndex(h => h.includes('amount') || h.includes('debit') || h.includes('spend') || h.includes('value') || h.includes('withdrawal'));
+      const catIdx = headers.findIndex(h => h.includes('category') || h.includes('type') || h.includes('tag') || h.includes('head'));
+      const descIdx = headers.findIndex(h => h.includes('desc') || h.includes('narration') || h.includes('remarks') || h.includes('particulars') || h.includes('payee') || h.includes('name'));
 
       const parsedData = [];
+      const amounts = [];
+
       for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+        const cols = lines[i].split(new RegExp(`${delimiter}(?=(?:(?:[^"]*"){2})*[^"]*$)`)).map(c => c.trim().replace(/^"|"$/g, ''));
         if (cols.length < 2) continue;
 
-        let dateStr = dateIdx !== -1 && cols[dateIdx] ? cols[dateIdx] : '2025-01-15';
-        let amtStr = amtIdx !== -1 && cols[amtIdx] ? cols[amtIdx] : cols[1];
-        let amount = parseFloat(amtStr.replace(/[^0-9.]/g, '')) || 0;
+        let rawDate = dateIdx !== -1 && cols[dateIdx] ? cols[dateIdx] : cols[0];
+        let pDate = parseTxnDate(rawDate);
+
+        let rawAmt = amtIdx !== -1 && cols[amtIdx] ? cols[amtIdx] : cols[1];
+        let amount = parseFloat(String(rawAmt).replace(/[^0-9.]/g, '')) || 0;
         if (amount <= 0) continue;
 
-        let category = catIdx !== -1 && cols[catIdx] ? cols[catIdx] : 'Food & Dining';
-        if (!FINANCE_CATEGORIES.includes(category)) {
-          const catLower = category.toLowerCase();
-          if (catLower.includes('food') || catLower.includes('zomato') || catLower.includes('swiggy') || catLower.includes('restaurant')) category = 'Food & Dining';
-          else if (catLower.includes('uber') || catLower.includes('travel') || catLower.includes('flight') || catLower.includes('cab')) category = 'Travel';
-          else if (catLower.includes('shop') || catLower.includes('amazon') || catLower.includes('flipkart')) category = 'Shopping';
-          else if (catLower.includes('rent') || catLower.includes('bill') || catLower.includes('electr')) category = 'Bills & Rent';
-          else if (catLower.includes('ent') || catLower.includes('movie') || catLower.includes('netflix')) category = 'Entertainment';
-          else if (catLower.includes('health') || catLower.includes('med') || catLower.includes('pharma')) category = 'Health';
-          else category = 'UPI Transfer';
+        let category = catIdx !== -1 && cols[catIdx] ? cols[catIdx] : '';
+        let desc = descIdx !== -1 && cols[descIdx] ? cols[descIdx] : (rawHeaders[0] ? cols[0] : 'Transaction');
+
+        if (!category || category.toLowerCase() === 'others' || !FINANCE_CATEGORIES.includes(category)) {
+          const textSearch = (category + ' ' + desc).toLowerCase();
+          if (textSearch.match(/swiggy|zomato|blinkit|zepto|food|restaurant|cafe|dine|hotel|kfc|mcdonald|domino/)) category = 'Food & Dining';
+          else if (textSearch.match(/uber|ola|rapido|metro|petrol|fuel|travel|flight|irctc|redbus|fastag/)) category = 'Transport';
+          else if (textSearch.match(/amazon|flipkart|myntra|meesho|shopping|store|retail|electronics/)) category = 'Shopping';
+          else if (textSearch.match(/rent|electricity|bescom|airtel|jio|bill|broadband|water|maintenance/)) category = 'Bills & Rent';
+          else if (textSearch.match(/netflix|spotify|prime|youtube|cinema|pvr|movie|hotstar|game/)) category = 'Entertainment';
+          else if (textSearch.match(/apollo|pharmacy|1mg|doctor|hospital|health|gym|cult/)) category = 'Health';
+          else if (textSearch.match(/udemy|coursera|college|school|fee|course|book|education/)) category = 'Education';
+          else if (textSearch.match(/flight|hotel|resort|trip|makemytrip|goibibo|airbnb/)) category = 'Travel';
+          else if (textSearch.match(/upi|gpay|paytm|phonepe|transfer|sent/)) category = 'UPI Transfer';
+          else category = 'Others';
         }
 
-        let desc = descIdx !== -1 && cols[descIdx] ? cols[descIdx] : 'Uploaded Transaction';
+        amounts.push(amount);
         parsedData.push({
-          date: dateStr,
+          date: pDate.dateStr,
           amount: amount,
           category: category,
-          desc: desc,
-          anomaly: amount > 12000
+          desc: desc.substring(0, 40),
+          monthKey: pDate.monthKey,
+          monthLabel: pDate.monthLabel
         });
       }
 
       if (parsedData.length > 0) {
+        const mean = amounts.reduce((s, a) => s + a, 0) / amounts.length;
+        const stdDev = Math.sqrt(amounts.reduce((s, a) => s + Math.pow(a - mean, 2), 0) / amounts.length);
+        const anomalyCutoff = Math.max(10000, mean + 1.8 * stdDev);
+
+        parsedData.forEach(t => {
+          t.anomaly = t.amount >= anomalyCutoff;
+        });
+
         FINANCE_DATA.length = 0;
         FINANCE_DATA.push(...parsedData);
+
+        syncFinanceFilterDropdowns();
         updateFinanceDashboard();
         statusEl.textContent = `✅ Successfully analyzed ${parsedData.length} transactions from "${file.name}"!`;
       } else {
-        statusEl.textContent = '⚠️ Could not extract valid transactions from CSV.';
+        statusEl.textContent = '⚠️ Could not extract valid debit/spending transactions from CSV.';
       }
     } catch (err) {
-      statusEl.textContent = '❌ Error parsing file: ' + err.message;
+      statusEl.textContent = '❌ Error parsing CSV file: ' + err.message;
     }
   };
   reader.readAsText(file);
 }
 
 function getFilteredFinanceData() {
-  const month = document.getElementById('fin-filter-month').value;
-  const cat = document.getElementById('fin-filter-category').value;
-  const anomaly = document.getElementById('fin-filter-anomaly').value;
+  const monthVal = document.getElementById('fin-filter-month').value;
+  const catVal = document.getElementById('fin-filter-category').value;
+  const anomalyVal = document.getElementById('fin-filter-anomaly').value;
 
   return FINANCE_DATA.filter(t => {
-    const m = new Date(t.date).getMonth(); // 0-indexed
-    if (month !== 'all' && m !== parseInt(month)) return false;
-    if (cat !== 'all' && t.category !== cat) return false;
-    if (anomaly === 'anomaly' && !t.anomaly) return false;
-    if (anomaly === 'normal' && t.anomaly) return false;
+    const pDate = parseTxnDate(t.date);
+    if (monthVal !== 'all' && pDate.monthKey !== monthVal && pDate.monthLabel !== monthVal) return false;
+    if (catVal !== 'all' && t.category !== catVal) return false;
+    if (anomalyVal === 'anomaly' && !t.anomaly) return false;
+    if (anomalyVal === 'normal' && t.anomaly) return false;
     return true;
   });
 }
@@ -213,18 +299,24 @@ function getFilteredFinanceData() {
 function updateFinanceDashboard() {
   const data = getFilteredFinanceData();
 
-  // KPIs
+  const distinctMonthsMap = new Map();
+  FINANCE_DATA.forEach(t => {
+    const p = parseTxnDate(t.date);
+    distinctMonthsMap.set(p.monthKey, true);
+  });
+  const totalMonthsCount = Math.max(1, distinctMonthsMap.size);
+
   const totalSpend = data.reduce((s, t) => s + t.amount, 0);
   const anomalyCount = data.filter(t => t.anomaly).length;
-  const avgMonthly = totalSpend / 6;
-  const savingsPotential = Math.round(totalSpend * 0.12);
+  const avgMonthly = totalSpend / totalMonthsCount;
+  const anomalySpendSum = data.filter(t => t.anomaly).reduce((s, t) => s + t.amount, 0);
+  const savingsPotential = Math.round(anomalySpendSum + (totalSpend * 0.08));
 
-  document.getElementById('fin-kpi-total').textContent = '₹' + totalSpend.toLocaleString('en-IN');
+  document.getElementById('fin-kpi-total').textContent = '₹' + Math.round(totalSpend).toLocaleString('en-IN');
   document.getElementById('fin-kpi-avg').textContent = '₹' + Math.round(avgMonthly).toLocaleString('en-IN');
   document.getElementById('fin-kpi-anomalies').textContent = anomalyCount;
-  document.getElementById('fin-kpi-savings').textContent = '₹' + savingsPotential.toLocaleString('en-IN');
+  document.getElementById('fin-kpi-savings').textContent = '₹' + Math.round(savingsPotential).toLocaleString('en-IN');
 
-  // Donut Chart
   const catTotals = {};
   FINANCE_CATEGORIES.forEach(c => catTotals[c] = 0);
   data.forEach(t => { catTotals[t.category] = (catTotals[t.category] || 0) + t.amount; });
@@ -251,39 +343,46 @@ function updateFinanceDashboard() {
         legend: { position: 'right', labels: { padding: 12, usePointStyle: true, pointStyleWidth: 10 } },
         tooltip: {
           callbacks: {
-            label: ctx => ` ${ctx.label}: ₹${ctx.raw.toLocaleString('en-IN')} (${((ctx.raw/totalSpend)*100).toFixed(1)}%)`
+            label: ctx => ` ${ctx.label}: ₹${ctx.raw.toLocaleString('en-IN')} (${totalSpend > 0 ? ((ctx.raw/totalSpend)*100).toFixed(1) : 0}%)`
           }
         }
       }
     }
   });
 
-  // Monthly Trend Bar Chart
-  const monthlyTotals = [0,0,0,0,0,0];
-  const monthlyAnomalies = [0,0,0,0,0,0];
+  const monthGroupMap = new Map();
   data.forEach(t => {
-    const m = new Date(t.date).getMonth();
-    monthlyTotals[m] += t.amount;
-    if (t.anomaly) monthlyAnomalies[m] += t.amount;
+    const p = parseTxnDate(t.date);
+    if (!monthGroupMap.has(p.monthKey)) {
+      monthGroupMap.set(p.monthKey, { label: p.monthKey, normal: 0, anomaly: 0, sortKey: p.year * 12 + p.month });
+    }
+    const g = monthGroupMap.get(p.monthKey);
+    if (t.anomaly) g.anomaly += t.amount;
+    else g.normal += t.amount;
   });
+
+  const sortedMonthGroups = Array.from(monthGroupMap.values()).sort((a, b) => a.sortKey - b.sortKey);
+  const trendLabels = sortedMonthGroups.length ? sortedMonthGroups.map(g => g.label) : ['No Data'];
+  const normalData = sortedMonthGroups.length ? sortedMonthGroups.map(g => g.normal) : [0];
+  const anomalyData = sortedMonthGroups.length ? sortedMonthGroups.map(g => g.anomaly) : [0];
 
   const trendCtx = document.getElementById('fin-trend-chart').getContext('2d');
   if (financeTrendChart) financeTrendChart.destroy();
   financeTrendChart = new Chart(trendCtx, {
     type: 'bar',
     data: {
-      labels: FINANCE_MONTHS,
+      labels: trendLabels,
       datasets: [
         {
           label: 'Normal Spend',
-          data: monthlyTotals.map((t,i) => t - monthlyAnomalies[i]),
+          data: normalData,
           backgroundColor: 'rgba(14, 165, 233, 0.7)',
           borderRadius: 6,
           borderSkipped: false,
         },
         {
           label: '🚨 Anomaly Spend',
-          data: monthlyAnomalies,
+          data: anomalyData,
           backgroundColor: 'rgba(231, 76, 60, 0.8)',
           borderRadius: 6,
           borderSkipped: false,
@@ -297,7 +396,7 @@ function updateFinanceDashboard() {
         x: { stacked: true, grid: { display: false } },
         y: {
           stacked: true,
-          ticks: { callback: v => '₹' + (v/1000).toFixed(0) + 'K' }
+          ticks: { callback: v => '₹' + (v >= 1000 ? (v/1000).toFixed(0) + 'K' : v) }
         }
       },
       plugins: {
@@ -311,7 +410,6 @@ function updateFinanceDashboard() {
     }
   });
 
-  // Anomaly Table
   const tbody = document.getElementById('fin-anomaly-tbody');
   const anomalies = data.filter(t => t.anomaly);
   tbody.innerHTML = anomalies.length ? anomalies.map(t =>
@@ -322,22 +420,109 @@ function updateFinanceDashboard() {
       <td>${t.desc}</td>
       <td><span class="severity-high">🚨 Flagged</span></td>
     </tr>`
-  ).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary)">No anomalies in current filter</td></tr>';
+  ).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary)">No anomalies detected in current filter</td></tr>';
 
-  // Persona cards
-  updatePersonaCards();
+  updatePersonaCards(data);
+  updateSavingsTips(data, catTotals, totalSpend, avgMonthly);
 }
 
-function updatePersonaCards() {
+function updatePersonaCards(currentData) {
   const container = document.getElementById('fin-persona-cards');
   if (!container) return;
-  container.innerHTML = PERSONA_DATA.months.map((m, i) =>
-    `<div class="persona-card ${PERSONA_DATA.personas[i].includes('Saver') ? 'saver' : PERSONA_DATA.personas[i].includes('High') ? 'high-spender' : 'balanced'}">
-      <div class="persona-month">${m}</div>
-      <div class="persona-label">${PERSONA_DATA.personas[i]}</div>
-      <div class="persona-amount">₹${PERSONA_DATA.totals[i].toLocaleString('en-IN')}</div>
-    </div>`
-  ).join('');
+
+  const datasetToUse = currentData || FINANCE_DATA;
+  const monthTotalsMap = new Map();
+
+  datasetToUse.forEach(t => {
+    const p = parseTxnDate(t.date);
+    monthTotalsMap.set(p.monthKey, (monthTotalsMap.get(p.monthKey) || 0) + t.amount);
+  });
+
+  const monthEntries = Array.from(monthTotalsMap.entries());
+  if (monthEntries.length === 0) {
+    container.innerHTML = '<p style="color:var(--text-secondary);grid-column:1/-1;">No persona data available.</p>';
+    return;
+  }
+
+  const overallTotal = monthEntries.reduce((s, [, tot]) => s + tot, 0);
+  const monthlyAvg = overallTotal / monthEntries.length;
+
+  container.innerHTML = monthEntries.map(([mKey, total]) => {
+    let persona = '🔵 Balanced';
+    let cls = 'balanced';
+    if (total < 0.85 * monthlyAvg) {
+      persona = '🟢 Saver';
+      cls = 'saver';
+    } else if (total > 1.18 * monthlyAvg) {
+      persona = '🔴 High Spender';
+      cls = 'high-spender';
+    }
+    return `
+      <div class="persona-card ${cls}">
+        <div class="persona-month">${mKey}</div>
+        <div class="persona-label">${persona}</div>
+        <div class="persona-amount">₹${Math.round(total).toLocaleString('en-IN')}</div>
+      </div>`;
+  }).join('');
+}
+
+function updateSavingsTips(data, catTotals, totalSpend, avgMonthly) {
+  const tipsContainer = document.getElementById('fin-savings-tips');
+  if (!tipsContainer) return;
+
+  if (totalSpend === 0) {
+    tipsContainer.innerHTML = '<p style="color:var(--text-secondary);">No spending data to analyze recommendations.</p>';
+    return;
+  }
+
+  const sortedCats = Object.entries(catTotals).sort((a, b) => b[1] - a[1]);
+  const top1 = sortedCats[0];
+  const top2 = sortedCats[1];
+
+  const highAnomalies = data.filter(t => t.anomaly);
+  const totalAnomalyAmt = highAnomalies.reduce((s, t) => s + t.amount, 0);
+
+  const tipsHTML = [];
+
+  if (top1 && top1[1] > 0) {
+    const pct1 = ((top1[1] / totalSpend) * 100).toFixed(1);
+    const saveAmt = Math.round(top1[1] * 0.15);
+    tipsHTML.push(`
+      <div class="savings-tip tip-high">
+        <span class="tip-badge">🔴 High</span>
+        <strong>${top1[0]}</strong> — ${pct1}% of total spend (₹${Math.round(top1[1]).toLocaleString('en-IN')}). A 15% reduction saves <strong>₹${saveAmt.toLocaleString('en-IN')}</strong>.
+      </div>
+    `);
+  }
+
+  if (top2 && top2[1] > 0) {
+    const pct2 = ((top2[1] / totalSpend) * 100).toFixed(1);
+    tipsHTML.push(`
+      <div class="savings-tip tip-medium">
+        <span class="tip-badge">🟡 Medium</span>
+        <strong>${top2[0]}</strong> — ${pct2}% of spending. Setting a weekly cap can optimize budget by <strong>₹${Math.round(top2[1] * 0.1).toLocaleString('en-IN')}</strong>.
+      </div>
+    `);
+  }
+
+  if (totalAnomalyAmt > 0) {
+    tipsHTML.push(`
+      <div class="savings-tip tip-high">
+        <span class="tip-badge">🚨 Anomaly Alert</span>
+        <strong>Flagged Spending</strong> — ₹${Math.round(totalAnomalyAmt).toLocaleString('en-IN')} detected across ${highAnomalies.length} unusual transactions. Review for duplicates or impulse purchases.
+      </div>
+    `);
+  }
+
+  const yearlyPotential = Math.round((totalSpend * 0.12) * 2);
+  tipsHTML.push(`
+    <div class="savings-tip tip-opportunity">
+      <span class="tip-badge">🟢 Opportunity</span>
+      <strong>Annual Savings Potential</strong> — Maintaining a balanced monthly budget can save up to <strong>₹${yearlyPotential.toLocaleString('en-IN')}/year</strong>.
+    </div>
+  `);
+
+  tipsContainer.innerHTML = tipsHTML.join('');
 }
 
 
