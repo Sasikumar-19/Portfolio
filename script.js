@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Typing Effect for Subtitle ---
     const subtitle = document.querySelector('.sub-title');
-    const textArray = ["Team Leader", "Analyzer", "Critical Thinker"];
+    const textArray = ["Data Analyst", "Python & SQL Specialist", "Power BI Dashboard Developer", "Statistical & A/B Testing Analyst"];
     let textIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
